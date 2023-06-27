@@ -6,7 +6,7 @@
 #    By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/27 14:35:05 by bfresque          #+#    #+#              #
-#    Updated: 2023/06/27 14:36:29 by bfresque         ###   ########.fr        #
+#    Updated: 2023/06/27 16:08:46 by bfresque         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,11 +20,18 @@ OBJ_DIR_PHILO = srcs/obj_philo
 
 OBJS = $(SRCS:%.c=$(OBJ_DIR_PHILO)/%.o) \
 
+SRCS =	srcs/actions_philos.c \
+		srcs/init.c \
+		srcs/libft_philo.c \
+		srcs/philo.c \
+		srcs/routine.c \
+		srcs/utils.c \
+
 AR = ar rcs
 
 RM = rm -f
 
-$(OBJ_DIR_PHILO)/%.o
+$(OBJ_DIR_PHILO)/%.o : %.c
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
