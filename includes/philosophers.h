@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 15:45:38 by bfresque          #+#    #+#             */
-/*   Updated: 2023/06/27 17:06:54 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/06/28 15:28:21 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 # include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <sys/time.h>
+# include <pthread.h>
 
 # define RESET "\033[0m"
 # define BLACK "\033[30m"
@@ -36,22 +38,33 @@
 
 typedef struct s_philo
 {
-	int	id_philo;
-	int	time_of_eat;
-	int	left_fork_id;
-	int	right_fork_id;
-	long long	time_last_eat;
+	int				id_philo;
+	int				nb_eat_time;
+	unsigned long	time_last_eat;
+	// struct s_init	*data;
+	pthread_t		thread_id;
+	pthread_mutex_t	left_fork_id;
+	pthread_mutex_t	right_fork_id;
 }	t_philo;
 
 typedef struct s_init
 {
-	int	nb_of_philo;
-	int	time_to_die;
-	int	time_to_eat;
-	int	time_to_sleep;
-	int number_must_eat;
-	t_philo *philo;
+	int				nb_of_philo;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				number_must_eat;
+	unsigned long	start_time;
+	t_philo			*philo;
+	pthread_mutex_t	is_eat;
 }	t_init;
+
+typedef struct s_data
+{
+	t_init	*init;
+	t_philo	*philo;
+}	t_data;
+
 
 /*********************	libft_philo.c ***********************/
 int	ft_atoi_philo(char *str);
@@ -59,5 +72,7 @@ int	ft_atoi_philo(char *str);
 /*********************	init.c ***********************/
 t_init	*init_data(t_init *data, char **av);
 t_init	*init_philo(t_init *data);
+
+int start_threads(t_init *data);
 
 #endif
