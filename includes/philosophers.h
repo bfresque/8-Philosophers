@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 15:45:38 by bfresque          #+#    #+#             */
-/*   Updated: 2023/06/28 15:28:21 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/06/29 10:17:22 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,12 @@ typedef struct s_philo
 	int				id_philo;
 	int				nb_eat_time;
 	unsigned long	time_last_eat;
-	// struct s_init	*data;
+	int				left_fork_id;
+	int				right_fork_id;
 	pthread_t		thread_id;
-	pthread_mutex_t	left_fork_id;
-	pthread_mutex_t	right_fork_id;
+	// struct s_init	*data;
+	// pthread_mutex_t	left_fork_id;
+	// pthread_mutex_t	*right_fork_id;
 }	t_philo;
 
 typedef struct s_init
@@ -56,6 +58,7 @@ typedef struct s_init
 	int				number_must_eat;
 	unsigned long	start_time;
 	t_philo			*philo;
+	pthread_mutex_t	*forks;
 	pthread_mutex_t	is_eat;
 }	t_init;
 
@@ -72,6 +75,7 @@ int	ft_atoi_philo(char *str);
 /*********************	init.c ***********************/
 t_init	*init_data(t_init *data, char **av);
 t_init	*init_philo(t_init *data);
+t_init	*init_forks(t_init *data);
 
 int start_threads(t_init *data);
 
