@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:33:27 by bfresque          #+#    #+#             */
-/*   Updated: 2023/06/29 10:17:00 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/06/30 13:59:38 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int main(int ac, char **av)
 	data = init_philo(data);
 	data = init_forks(data);
 	start_threads(data);
-	free(data);  // Libérer la mémoire une fois que vous avez terminé avec data
+	// free(data);  // Libérer la mémoire une fois que vous avez terminé avec data
 	(void)ac;
 	return 0;
 }
