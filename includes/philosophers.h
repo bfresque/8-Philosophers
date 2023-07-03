@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 15:45:38 by bfresque          #+#    #+#             */
-/*   Updated: 2023/07/03 10:25:27 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/07/03 14:16:56 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct s_philo
 	int left_fork_id;
 	int right_fork_id;
 	pthread_t thread_id;
+	pthread_mutex_t eat_mutex;
 } t_philo;
 
 typedef struct s_init

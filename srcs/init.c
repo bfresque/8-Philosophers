@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:33:19 by bfresque          #+#    #+#             */
-/*   Updated: 2023/07/03 11:58:23 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/07/03 14:17:26 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ t_init *init_philo(t_init *init)
 		init->philo[i].left_fork_id = i;
 		init->philo[i].right_fork_id = (i + 1) % init->nb_of_philo;
 		init->philo[i].time_last_eat = 0;
+		pthread_mutex_init(&(init->philo[i].eat_mutex), NULL);
 		i--;
 	}
 	return init;
