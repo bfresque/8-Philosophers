@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 15:45:38 by bfresque          #+#    #+#             */
-/*   Updated: 2023/06/30 14:55:49 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/07/03 10:25:27 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 # define MAGENTA "\033[35m"
 # define CYAN "\033[36m"
 # define WHITE "\033[37m"
+# define MAX_EAT_TIMES 2
 
 typedef struct s_philo
 {
@@ -45,22 +46,19 @@ typedef struct s_philo
 	int left_fork_id;
 	int right_fork_id;
 	pthread_t thread_id;
-
-	// struct s_init	*data;
-	// pthread_mutex_t	left_fork_id;
-	// pthread_mutex_t	*right_fork_id;
 } t_philo;
 
 typedef struct s_init
 {
-	int nb_of_philo;
-	int time_to_die;
-	int time_to_eat;
-	int time_to_sleep;
-	int number_must_eat;
-	t_philo *philo;
-	pthread_mutex_t *forks;
-	pthread_mutex_t is_eat;
+    int nb_of_philo;
+    int time_to_die;
+    int time_to_eat;
+    int time_to_sleep;
+    int number_must_eat;
+    t_philo *philo;
+    pthread_mutex_t *forks;
+    pthread_mutex_t is_eat;
+    int all_philo_finished;
 } t_init;
 
 typedef struct s_data
@@ -79,4 +77,6 @@ t_init	*init_forks(t_init *data);
 
 void start_threads(t_init *data);
 
+
+void *routine(void *arg);
 #endif
