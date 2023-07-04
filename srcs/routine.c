@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:33:32 by bfresque          #+#    #+#             */
-/*   Updated: 2023/07/03 15:25:18 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/07/04 10:15:20 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ void take_fork(t_init *init, t_philo *philo)
 }
 
 
-static void *philo_life(void *arg)
+void *philo_life(void *arg)
 {
 	t_data *data = (t_data *)arg;
 
@@ -146,6 +146,8 @@ static void *philo_life(void *arg)
 	{
 		// check_all_deaths(data->init);
 		take_fork(data->init, data->philo);
+		if(i == data->init->number_must_eat)
+			break;
 		check_all_deaths(data->init);
 		// check_death(data->init, data->philo);
 		verif_if_all_eat(data->init);
@@ -157,8 +159,9 @@ static void *philo_life(void *arg)
 		check_all_deaths(data->init);
 		// check_death(data->init, data->philo);
 		i++;
+
 	}
-	return NULL;
+	return(NULL);
 }
 
 void start_threads(t_init *init)

@@ -6,15 +6,15 @@
 #    By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/27 14:35:05 by bfresque          #+#    #+#              #
-#    Updated: 2023/06/28 12:38:42 by bfresque         ###   ########.fr        #
+#    Updated: 2023/07/04 09:08:35 by bfresque         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = philosopher
+NAME = philo
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra #-Werror -g3
+CFLAGS = -Wall -Wextra -Werror -g3
 
 OBJ_DIR_PHILO = srcs/obj_philo
 
