@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:33:19 by bfresque          #+#    #+#             */
-/*   Updated: 2023/07/04 10:31:49 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/07/04 14:11:02 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@ t_init *init_data(t_init *init, char **av)
 	init->time_to_die = ft_atoi_philo(av[2]);
 	init->time_to_eat = ft_atoi_philo(av[3]);
 	init->time_to_sleep = ft_atoi_philo(av[4]);
-	init->number_must_eat = 1;
 	if(av[5])
 		init->number_must_eat = ft_atoi_philo(av[5]);
+	else
+		init->number_must_eat = -1;
 	init->all_philo_finished = 0;
 	return init;
 }
-
 
 t_init *init_philo(t_init *init)
 {

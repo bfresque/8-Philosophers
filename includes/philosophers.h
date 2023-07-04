@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 15:45:38 by bfresque          #+#    #+#             */
-/*   Updated: 2023/07/03 14:16:56 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/07/04 14:08:47 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,15 @@ typedef struct s_philo
 
 typedef struct s_init
 {
-    int nb_of_philo;
-    int time_to_die;
-    int time_to_eat;
-    int time_to_sleep;
-    int number_must_eat;
-    t_philo *philo;
-    pthread_mutex_t *forks;
-    pthread_mutex_t is_eat;
-    int all_philo_finished;
+	int nb_of_philo;
+	int time_to_die;
+	int time_to_eat;
+	int time_to_sleep;
+	int number_must_eat;
+	t_philo *philo;
+	pthread_mutex_t print;
+	pthread_mutex_t *forks;
+	int all_philo_finished;
 } t_init;
 
 typedef struct s_data
@@ -68,16 +68,27 @@ typedef struct s_data
 	t_philo *philo;
 } t_data;
 
-/*********************	libft_philo.c ***********************/
-int	ft_atoi_philo(char *str);
+
+/*********************	action.c ***********************/
+void action_think(t_init *init, t_philo *philo);
+void action_sleep(t_init *init, t_philo *philo);
+void take_fork(t_init *init, t_philo *philo);
+
+/*********************	check.c ***********************/
+void check_all_deaths(t_init *init);
+int check_all_eat(t_init *init);
 
 /*********************	init.c ***********************/
 t_init	*init_data(t_init *data, char **av);
 t_init	*init_philo(t_init *data);
 t_init	*init_forks(t_init *data);
 
+/*********************	routine.c ***********************/
 void start_threads(t_init *data);
 
+/*********************	utils.c ***********************/
+int	ft_atoi_philo(char *str);
+long long ft_get_time();
+void print(t_init *init, int id_phil, char *str);
 
-void *routine(void *arg);
 #endif

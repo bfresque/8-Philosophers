@@ -6,7 +6,7 @@
 #    By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/27 14:35:05 by bfresque          #+#    #+#              #
-#    Updated: 2023/07/04 09:08:35 by bfresque         ###   ########.fr        #
+#    Updated: 2023/07/04 14:09:18 by bfresque         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,9 +20,9 @@ OBJ_DIR_PHILO = srcs/obj_philo
 
 OBJS = $(SRCS:%.c=$(OBJ_DIR_PHILO)/%.o) \
 
-SRCS =	srcs/actions_philos.c \
+SRCS =	srcs/actions.c \
+		srcs/check.c \
 		srcs/init.c \
-		srcs/libft_philo.c \
 		srcs/philo.c \
 		srcs/routine.c \
 		srcs/utils.c \
