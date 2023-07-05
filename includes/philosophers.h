@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 15:45:38 by bfresque          #+#    #+#             */
-/*   Updated: 2023/07/04 14:08:47 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/07/05 11:01:59 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_init
 	int time_to_die;
 	int time_to_eat;
 	int time_to_sleep;
+	int time_to_think;
 	int number_must_eat;
 	t_philo *philo;
 	pthread_mutex_t print;

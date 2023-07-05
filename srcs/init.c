@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:33:19 by bfresque          #+#    #+#             */
-/*   Updated: 2023/07/04 14:11:02 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/07/05 11:11:37 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,14 @@
 
 t_init *init_data(t_init *init, char **av)
 {
+	int t_to_th;
+
 	init->nb_of_philo = ft_atoi_philo(av[1]);
 	init->time_to_die = ft_atoi_philo(av[2]);
 	init->time_to_eat = ft_atoi_philo(av[3]);
 	init->time_to_sleep = ft_atoi_philo(av[4]);
+	t_to_th = (init->time_to_die - (init->time_to_eat + init->time_to_sleep)) / 2;
+	init->time_to_think = t_to_th;
 	if(av[5])
 		init->number_must_eat = ft_atoi_philo(av[5]);
 	else
@@ -62,3 +66,9 @@ t_init *init_forks(t_init *init)
 	}
 	return init;
 }
+
+
+	// if (t_to_th < 0)
+	// 	t_to_th = 0;
+	// if (1 == init->nb_of_philo)
+	// 	t_to_th = -1;

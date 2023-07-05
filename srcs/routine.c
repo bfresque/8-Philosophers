@@ -6,59 +6,69 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:33:32 by bfresque          #+#    #+#             */
-/*   Updated: 2023/07/04 14:11:08 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/07/05 09:42:17 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"../includes/philosophers.h"
 
-void *philo_life(void *arg)
+void	routine_one(t_init*init, t_philo *philo)
+{
+	int	i;
+
+	i = 1;
+	while (i <= init->number_must_eat)
+	{
+		take_fork(init, philo);
+		if(i == init->number_must_eat)
+			break;
+		check_all_deaths(init);
+		check_all_eat(init);
+		action_sleep(init, philo);
+		check_all_deaths(init);
+		action_think(init, philo);
+		check_all_deaths(init);
+		i++;
+	}
+}
+
+void	routine_two(t_init*init, t_philo *philo)
+{
+	int	i;
+
+	i = 1;
+	while (i)
+	{
+		take_fork(init, philo);
+		check_all_deaths(init);
+		action_sleep(init, philo);
+		check_all_deaths(init);
+		action_think(init, philo);
+		check_all_deaths(init);
+		i++;
+	}
+}
+
+void	*philo_life(void *arg)
 {
 	t_data *data = (t_data *)arg;
 
-	int i = 1;
 	if(data->init->number_must_eat > 0)
-	{
-		while (i <= data->init->number_must_eat)
-		{
-			take_fork(data->init, data->philo);
-			if(i == data->init->number_must_eat)
-				break;
-			check_all_deaths(data->init);
-			check_all_eat(data->init);
-			action_sleep(data->init, data->philo);
-			check_all_deaths(data->init);
-			action_think(data->init, data->philo);
-			check_all_deaths(data->init);
-			i++;
-		}
-	}
+		routine_one(data->init, data->philo);
 	else if(data->init->number_must_eat < 0)
-	{
-		while (i)
-		{
-			take_fork(data->init, data->philo);
-			check_all_deaths(data->init);
-			action_sleep(data->init, data->philo);
-			check_all_deaths(data->init);
-			action_think(data->init, data->philo);
-			check_all_deaths(data->init);
-			i++;
-		}
-	}
+		routine_two(data->init, data->philo);
 	else
 		exit(-1);
 	return(NULL);
 }
 
-void start_threads(t_init *init)
+void	start_threads(t_init *init)
 {
-	int i;
-	long long int time_init;
-	t_data *data;
+	int	i;
+	long long int	time_init;
+	t_data	*data;
 
 	time_init = ft_get_time();
-
 	i = 0;
 	while (i < init->nb_of_philo)
 	{
