@@ -1,53 +1,25 @@
-jai un probleme pourquoi est ce que mon philo meurt alors que le programme devrait tourner indefiniment avec ces arguments:
+pourquoi mon code ne marche pas pour un philo quand en argument je mets 1 philo ca beug
 
-sortie terminal :
-➜  philo git:(main) ✗ ./philo 5 410 200 200                                       
-0 1  has taken a fork
-0 1  has taken a fork
-0 1  is eating
-0 3  has taken a fork
-0 3  has taken a fork
-0 3  is eating
-200 3  is sleeping
-200 1  is sleeping
-200 2  has taken a fork
-200 2  has taken a fork
-200 2  is eating
-200 5  has taken a fork
-200 5  has taken a fork
-200 5  is eating
-400 3  is thinking
-400 1  is thinking
-400 5  is sleeping
-400 4  has taken a fork
-400 4  has taken a fork
-400 1  has taken a fork
-400 1  has taken a fork
-400 1  is eating
-400 4  is eating
-400 2  is sleeping
-600 3  has died
-
-mon code :
 typedef struct s_philo
 {
-	int id_philo;
-	int nb_eat_time;
-	long long time_last_eat;
-	long long start_time;
-	int left_fork_id;
-	int right_fork_id;
+	int	id_philo;
+	int	nb_eat_time;
+	long	long time_last_eat;
+	long	long start_time;
+	int	left_fork_id;
+	int	right_fork_id;
 	pthread_t thread_id;
 	pthread_mutex_t eat_mutex;
 } t_philo;
 
 typedef struct s_init
 {
-	int nb_of_philo;
-	int time_to_die;
-	int time_to_eat;
-	int time_to_sleep;
-	int number_must_eat;
+	int	time_to_think;
+	int	nb_of_philo;
+	int	time_to_die;
+	int	time_to_eat;
+	int	time_to_sleep;
+	int	number_must_eat;
 	t_philo *philo;
 	pthread_mutex_t print;
 	pthread_mutex_t *forks;
@@ -62,10 +34,19 @@ typedef struct s_data
 
 t_init *init_data(t_init *init, char **av)
 {
+	int t_to_th;
+
+//verifier qu'en entree les arguments soit bien des nombres positifs
 	init->nb_of_philo = ft_atoi_philo(av[1]);
 	init->time_to_die = ft_atoi_philo(av[2]);
 	init->time_to_eat = ft_atoi_philo(av[3]);
 	init->time_to_sleep = ft_atoi_philo(av[4]);
+	t_to_th = (init->time_to_die - (init->time_to_eat + init->time_to_sleep)) / 2;
+	if (t_to_th < 0)
+		t_to_th = 0;
+	if (1 == init->nb_of_philo)
+		t_to_th = -1;
+	init->time_to_think = t_to_th;
 	if(av[5])
 		init->number_must_eat = ft_atoi_philo(av[5]);
 	else
@@ -191,15 +172,20 @@ int check_all_eat(t_init *init)
 void action_think(t_init *init, t_philo *philo)
 {
 	print(init, philo->id_philo, " is thinking\n");
+	usleep(init->time_to_think * 1000);
 }
 
 void action_sleep(t_init *init, t_philo *philo)
 {
+	long long int start_sleep_time;
+	long long int end_sleep_time;
+	long long int sleep_duration;
+
 	print(init, philo->id_philo, " is sleeping\n");
-	long long int start_sleep_time = ft_get_time();
+	start_sleep_time = ft_get_time();
 	usleep(init->time_to_sleep * 1000);
-	long long int end_sleep_time = ft_get_time();
-	long long int sleep_duration = end_sleep_time - start_sleep_time;
+	end_sleep_time = ft_get_time();
+	sleep_duration = end_sleep_time - start_sleep_time;
 	if (sleep_duration < init->time_to_sleep)
 		usleep(init->time_to_sleep - sleep_duration);
 }
@@ -207,12 +193,13 @@ void action_sleep(t_init *init, t_philo *philo)
 void action_eat(t_init *init, t_philo *philo)
 {
 	print(init, philo->id_philo, " is eating\n");
-	pthread_mutex_lock(&(philo->eat_mutex));
-	philo->nb_eat_time++;
-	pthread_mutex_unlock(&(philo->eat_mutex));
 	philo->time_last_eat = ft_get_time();
-	usleep(init->time_to_eat * 1000);
-	if (philo->left_fork_id < philo->right_fork_id)
+	pthread_mutex_lock(&(philo->eat_mutex));//ne pas toucher
+	philo->nb_eat_time++;
+	pthread_mutex_unlock(&(philo->eat_mutex)); //ne pas toucher
+
+	usleep(init->time_to_eat * 1000); //mit a la fin ca marche super mais cest interdit 
+	if(philo->id_philo % 2 == 0)
 	{
 		pthread_mutex_unlock(&init->forks[philo->left_fork_id]);
 		pthread_mutex_unlock(&init->forks[philo->right_fork_id]);
@@ -226,70 +213,82 @@ void action_eat(t_init *init, t_philo *philo)
 
 void take_fork(t_init *init, t_philo *philo)
 {
-	if (philo->id_philo % 2 == 0)
+	// if (philo->id_philo % 2 == 0)
+	// {
+	// 	usleep(50);
+	// }
+	if(philo->id_philo % 2 == 0)
 	{
-		pthread_mutex_lock(&init->forks[philo->right_fork_id]);
 		pthread_mutex_lock(&init->forks[philo->left_fork_id]);
+		pthread_mutex_lock(&init->forks[philo->right_fork_id]);
 	}
 	else
 	{
-		pthread_mutex_lock(&init->forks[philo->left_fork_id]);
 		pthread_mutex_lock(&init->forks[philo->right_fork_id]);
+		pthread_mutex_lock(&init->forks[philo->left_fork_id]);
 	}
 	print(init, philo->id_philo, " has taken a fork\n");
 	print(init, philo->id_philo, " has taken a fork\n");
 	action_eat(init, philo);
-	pthread_mutex_unlock(&init->forks[philo->left_fork_id]);
-	pthread_mutex_unlock(&init->forks[philo->right_fork_id]);
 }
 
-void *philo_life(void *arg)
+void	routine_one(t_init*init, t_philo *philo)
+{
+	int	i;
+
+	i = 1;
+	while (i <= init->number_must_eat)
+	{
+		take_fork(init, philo);
+		if(i == init->number_must_eat)
+			break;
+		check_all_deaths(init);
+		check_all_eat(init);
+		action_sleep(init, philo);
+		check_all_deaths(init);
+		action_think(init, philo);
+		check_all_deaths(init);
+		i++;
+	}
+}
+
+void	routine_two(t_init*init, t_philo *philo)
+{
+	int	i;
+
+	i = 1;
+	while (i)
+	{
+		take_fork(init, philo);
+		check_all_deaths(init);
+		action_sleep(init, philo);
+		check_all_deaths(init);
+		action_think(init, philo);
+		check_all_deaths(init);
+		i++;
+	}
+}
+
+void	*philo_life(void *arg)
 {
 	t_data *data = (t_data *)arg;
 
-	int i = 1;
 	if(data->init->number_must_eat > 0)
-	{
-		while (i <= data->init->number_must_eat)
-		{
-			take_fork(data->init, data->philo);
-			if(i == data->init->number_must_eat)
-				break;
-			check_all_deaths(data->init);
-			check_all_eat(data->init);
-			action_sleep(data->init, data->philo);
-			check_all_deaths(data->init);
-			action_think(data->init, data->philo);
-			check_all_deaths(data->init);
-			i++;
-		}
-	}
+		routine_one(data->init, data->philo);
 	else if(data->init->number_must_eat < 0)
-	{
-		while (i)
-		{
-			take_fork(data->init, data->philo);
-			check_all_deaths(data->init);
-			action_sleep(data->init, data->philo);
-			check_all_deaths(data->init);
-			action_think(data->init, data->philo);
-			check_all_deaths(data->init);
-			i++;
-		}
-	}
+		routine_two(data->init, data->philo);
 	else
 		exit(-1);
 	return(NULL);
 }
 
-void start_threads(t_init *init)
+void	start_threads(t_init *init)
 {
-	int i;
-	long long int time_init;
-	t_data *data;
+	int	i;
+	long long int	time_init;
+	t_data	*data;
 
 	time_init = ft_get_time();
-
 	i = 0;
 	while (i < init->nb_of_philo)
 	{
@@ -303,11 +302,10 @@ void start_threads(t_init *init)
 		pthread_create(&init->philo[i].thread_id, NULL, philo_life, data);
 		i++;
 	}
-	i = 0;
-	while (i < init->nb_of_philo)
+	i = -1;
+	while (i++ < init->nb_of_philo)
 	{
 		pthread_join(init->philo[i].thread_id, NULL);
-		i++;
 	}
 }
 
@@ -319,11 +317,17 @@ int main(int ac, char **av)
 		printf("Erreur d'allocation mémoire pour data\n");
 		return 1;
 	}
+
+	if (ac != 5 && ac != 6)
+	{
+		printf("Error: number of arguments\n");
+		free(data);
+		return(0);
+	}
 	data = init_data(data, av);
 	data = init_philo(data);
 	data = init_forks(data);
 	start_threads(data);
-	// free(data); // Libérer la mémoire une fois que vous avez terminé avec data
-	(void)ac;
+	free(data); // Libérer la mémoire une fois que vous avez terminé avec data
 	return 0;
 }

@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 14:02:25 by bfresque          #+#    #+#             */
-/*   Updated: 2023/07/04 14:06:36 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/07/05 12:35:59 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void check_death(t_init *init, t_philo *philo)
 	long long int time_since_last_eat = current_time - philo->time_last_eat;
 	if (time_since_last_eat > (long long int)init->time_to_die)
 	{
-		print(init, philo->id_philo, " has died\n");
+		print(init, philo->id_philo, " died\n");
 		exit(1);
 	}
 }

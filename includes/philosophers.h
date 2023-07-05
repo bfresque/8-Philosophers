@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 15:45:38 by bfresque          #+#    #+#             */
-/*   Updated: 2023/07/05 11:01:59 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/07/05 12:26:13 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,24 +39,24 @@
 
 typedef struct s_philo
 {
-	int id_philo;
-	int nb_eat_time;
-	long long time_last_eat;
-	long long start_time;
-	int left_fork_id;
-	int right_fork_id;
+	int	id_philo;
+	int	nb_eat_time;
+	long	long time_last_eat;
+	long	long start_time;
+	int	left_fork_id;
+	int	right_fork_id;
 	pthread_t thread_id;
 	pthread_mutex_t eat_mutex;
 } t_philo;
 
 typedef struct s_init
 {
-	int nb_of_philo;
-	int time_to_die;
-	int time_to_eat;
-	int time_to_sleep;
-	int time_to_think;
-	int number_must_eat;
+	int	time_to_think;
+	int	nb_of_philo;
+	int	time_to_die;
+	int	time_to_eat;
+	int	time_to_sleep;
+	int	number_must_eat;
 	t_philo *philo;
 	pthread_mutex_t print;
 	pthread_mutex_t *forks;
@@ -91,5 +91,6 @@ void start_threads(t_init *data);
 int	ft_atoi_philo(char *str);
 long long ft_get_time();
 void print(t_init *init, int id_phil, char *str);
+void	philo_just_one(char **av);
 
 #endif

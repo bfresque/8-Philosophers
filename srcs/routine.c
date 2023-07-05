@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:33:32 by bfresque          #+#    #+#             */
-/*   Updated: 2023/07/05 09:42:17 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/07/05 12:28:30 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,10 @@ void	start_threads(t_init *init)
 		pthread_create(&init->philo[i].thread_id, NULL, philo_life, data);
 		i++;
 	}
-	i = 0;
-	while (i < init->nb_of_philo)
-	{
-		pthread_join(init->philo[i].thread_id, NULL);
-		i++;
-	}
+	i = -1;
+	// if(init->nb_of_philo > 1)
+	// {
+		while (i++ < init->nb_of_philo)
+			pthread_join(init->philo[i].thread_id, NULL);
+	// }
 }

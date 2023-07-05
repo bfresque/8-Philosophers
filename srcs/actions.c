@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:33:12 by bfresque          #+#    #+#             */
-/*   Updated: 2023/07/05 11:03:10 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/07/05 12:00:55 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,16 @@ void action_eat(t_init *init, t_philo *philo)
 	pthread_mutex_unlock(&(philo->eat_mutex)); //ne pas toucher
 
 	usleep(init->time_to_eat * 1000); //mit a la fin ca marche super mais cest interdit 
-	if(philo->id_philo % 2 == 0)
-	{
-		pthread_mutex_unlock(&init->forks[philo->left_fork_id]);
+	// if(philo->id_philo % 2 == 0)
+	// {
+	// 	pthread_mutex_unlock(&init->forks[philo->left_fork_id]);
+	// 	pthread_mutex_unlock(&init->forks[philo->right_fork_id]);
+	// }
+	// else
+	// {
 		pthread_mutex_unlock(&init->forks[philo->right_fork_id]);
-	}
-	else
-	{
-		pthread_mutex_unlock(&init->forks[philo->right_fork_id]);
 		pthread_mutex_unlock(&init->forks[philo->left_fork_id]);
-	}
+	// }
 }
 
 void take_fork(t_init *init, t_philo *philo)
@@ -60,16 +60,16 @@ void take_fork(t_init *init, t_philo *philo)
 	// {
 	// 	usleep(50);
 	// }
-	if(philo->id_philo % 2 == 0)
-	{
-		pthread_mutex_lock(&init->forks[philo->left_fork_id]);
+	// if(philo->id_philo % 2 == 0)
+	// {
+		// pthread_mutex_lock(&init->forks[philo->left_fork_id]);
+		// pthread_mutex_lock(&init->forks[philo->right_fork_id]);
+	// }
+	// else
+	// {
 		pthread_mutex_lock(&init->forks[philo->right_fork_id]);
-	}
-	else
-	{
-		pthread_mutex_lock(&init->forks[philo->right_fork_id]);
 		pthread_mutex_lock(&init->forks[philo->left_fork_id]);
-	}
+	// }
 	print(init, philo->id_philo, " has taken a fork\n");
 	print(init, philo->id_philo, " has taken a fork\n");
 	action_eat(init, philo);
