@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:33:19 by bfresque          #+#    #+#             */
-/*   Updated: 2023/07/05 12:30:56 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/07/05 16:57:29 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,8 @@ t_init *init_data(t_init *init, char **av)
 {
 	int t_to_th;
 
-
-//verifier qu'en entree les arguments soit bien des nombres positifs
-
 	if(ft_atoi_philo(av[1]) == 1)
-		philo_just_one(av);
+		philo_just_one(init, av);
 	init->nb_of_philo = ft_atoi_philo(av[1]);
 	init->time_to_die = ft_atoi_philo(av[2]);
 	init->time_to_eat = ft_atoi_philo(av[3]);
@@ -34,6 +31,7 @@ t_init *init_data(t_init *init, char **av)
 	else
 		init->number_must_eat = -1;
 	init->all_philo_finished = 0;
+	pthread_mutex_init(&(init->print_mutex), NULL);
 	return init;
 }
 

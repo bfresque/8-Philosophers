@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:33:32 by bfresque          #+#    #+#             */
-/*   Updated: 2023/07/05 12:28:30 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/07/05 16:50:25 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,30 +62,41 @@ void	*philo_life(void *arg)
 	return(NULL);
 }
 
-void	start_threads(t_init *init)
-{
-	int	i;
-	long long int	time_init;
-	t_data	*data;
+void start_threads(t_init *init) {
+	int i = 0;
+	long long int time_init = ft_get_time();
+	t_data *data = NULL;
 
-	time_init = ft_get_time();
-	i = 0;
-	while (i < init->nb_of_philo)
-	{
+	while (i < init->nb_of_philo) {
 		data = malloc(sizeof(t_data));
 		if (!data)
+		{
+			int j = 0;
+			while (j < i)
+			{
+				free(init->philo[j].data);
+				j++;
+			}
 			return;
+		}
 		data->init = init;
 		data->philo = &init->philo[i];
-		data->init->philo->start_time = time_init;
+		data->philo->start_time = time_init;
 		data->philo->time_last_eat = ft_get_time();
+		init->philo[i].data = data;
 		pthread_create(&init->philo[i].thread_id, NULL, philo_life, data);
 		i++;
 	}
-	i = -1;
-	// if(init->nb_of_philo > 1)
-	// {
-		while (i++ < init->nb_of_philo)
-			pthread_join(init->philo[i].thread_id, NULL);
-	// }
+	i = 0;
+	while (i < init->nb_of_philo)
+	{
+		pthread_join(init->philo[i].thread_id, NULL);
+		i++;
+	}
+	i = 0;
+	while (i < init->nb_of_philo)
+	{
+		free(init->philo[i].data);
+		i++;
+	}
 }

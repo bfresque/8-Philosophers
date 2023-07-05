@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 15:45:38 by bfresque          #+#    #+#             */
-/*   Updated: 2023/07/05 12:26:13 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/07/05 16:57:49 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,30 +37,59 @@
 # define WHITE "\033[37m"
 # define MAX_EAT_TIMES 2
 
+// typedef struct s_philo
+// {
+// 	int	id_philo;
+// 	int	nb_eat_time;
+// 	long	long time_last_eat;
+// 	long	long start_time;
+// 	int	left_fork_id;
+// 	int	right_fork_id;
+// 	pthread_t thread_id;
+// 	pthread_mutex_t eat_mutex;
+// 	pthread_mutex_t death_mutex;
+// } t_philo;
+
+// typedef struct s_init
+// {
+// 	int	time_to_think;
+// 	int	nb_of_philo;
+// 	int	time_to_die;
+// 	int	time_to_eat;
+// 	int	time_to_sleep;
+// 	int	number_must_eat;
+// 	t_philo *philo;
+// 	// pthread_mutex_t print;
+// 	pthread_mutex_t *forks;
+// 	pthread_mutex_t print_mutex;
+// 	int all_philo_finished;
+// } t_init;
 typedef struct s_philo
 {
-	int	id_philo;
-	int	nb_eat_time;
-	long	long time_last_eat;
-	long	long start_time;
-	int	left_fork_id;
-	int	right_fork_id;
-	pthread_t thread_id;
-	pthread_mutex_t eat_mutex;
+    int id_philo;
+    int nb_eat_time;
+    long long time_last_eat;
+    long long start_time;
+    int left_fork_id;
+    int right_fork_id;
+    pthread_t thread_id;
+    pthread_mutex_t eat_mutex;
+    pthread_mutex_t death_mutex;
+    struct s_data *data; // Ajout d'un pointeur vers la structure t_data
 } t_philo;
 
 typedef struct s_init
 {
-	int	time_to_think;
-	int	nb_of_philo;
-	int	time_to_die;
-	int	time_to_eat;
-	int	time_to_sleep;
-	int	number_must_eat;
-	t_philo *philo;
-	pthread_mutex_t print;
-	pthread_mutex_t *forks;
-	int all_philo_finished;
+    int time_to_think;
+    int nb_of_philo;
+    int time_to_die;
+    int time_to_eat;
+    int time_to_sleep;
+    int number_must_eat;
+    t_philo *philo;
+    pthread_mutex_t *forks;
+    pthread_mutex_t print_mutex;
+    int all_philo_finished;
 } t_init;
 
 typedef struct s_data
@@ -78,11 +107,12 @@ void take_fork(t_init *init, t_philo *philo);
 /*********************	check.c ***********************/
 void check_all_deaths(t_init *init);
 int check_all_eat(t_init *init);
+int check_numbers(int argc, char **argv);
 
 /*********************	init.c ***********************/
 t_init	*init_data(t_init *data, char **av);
-t_init	*init_philo(t_init *data);
-t_init	*init_forks(t_init *data);
+t_init *init_philo(t_init *init);
+t_init *init_forks(t_init *init);
 
 /*********************	routine.c ***********************/
 void start_threads(t_init *data);
@@ -91,6 +121,9 @@ void start_threads(t_init *data);
 int	ft_atoi_philo(char *str);
 long long ft_get_time();
 void print(t_init *init, int id_phil, char *str);
-void	philo_just_one(char **av);
+void	philo_just_one(t_init *init, char **av);
+
+
+void	ft_close(t_init *init);
 
 #endif
