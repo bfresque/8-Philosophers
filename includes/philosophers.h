@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 15:45:38 by bfresque          #+#    #+#             */
-/*   Updated: 2023/07/05 16:57:49 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/08/02 11:00:25 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,33 +37,6 @@
 # define WHITE "\033[37m"
 # define MAX_EAT_TIMES 2
 
-// typedef struct s_philo
-// {
-// 	int	id_philo;
-// 	int	nb_eat_time;
-// 	long	long time_last_eat;
-// 	long	long start_time;
-// 	int	left_fork_id;
-// 	int	right_fork_id;
-// 	pthread_t thread_id;
-// 	pthread_mutex_t eat_mutex;
-// 	pthread_mutex_t death_mutex;
-// } t_philo;
-
-// typedef struct s_init
-// {
-// 	int	time_to_think;
-// 	int	nb_of_philo;
-// 	int	time_to_die;
-// 	int	time_to_eat;
-// 	int	time_to_sleep;
-// 	int	number_must_eat;
-// 	t_philo *philo;
-// 	// pthread_mutex_t print;
-// 	pthread_mutex_t *forks;
-// 	pthread_mutex_t print_mutex;
-// 	int all_philo_finished;
-// } t_init;
 typedef struct s_philo
 {
     int id_philo;
@@ -80,6 +53,9 @@ typedef struct s_philo
 
 typedef struct s_init
 {
+    int flag_eat;
+    int flag_death;
+    
     int time_to_think;
     int nb_of_philo;
     int time_to_die;

@@ -6,11 +6,29 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 14:02:25 by bfresque          #+#    #+#             */
-/*   Updated: 2023/07/05 16:14:51 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/08/02 11:23:27 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"../includes/philosophers.h"
+#include "../includes/philosophers.h"
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void ft_close(t_init *init)
+{
+	int i;
+
+	i = 0;
+	while (i < init->nb_of_philo)
+	{
+		pthread_mutex_destroy(&init->forks[i]);
+		i++;
+	}
+	if (init->philo)
+		free(init->philo);
+	if (init->forks)
+		free(init->forks);
+}
 
 void check_death(t_init *init, t_philo *philo)
 {
@@ -21,6 +39,8 @@ void check_death(t_init *init, t_philo *philo)
 		pthread_mutex_init(&(philo->death_mutex), NULL);
 		pthread_mutex_lock(&(philo->death_mutex));
 		print(init, philo->id_philo, " died\n");
+		init->flag_death = 1;
+		ft_close(init);
 		pthread_mutex_unlock(&(philo->death_mutex));
 	}
 }
@@ -34,25 +54,6 @@ void check_all_deaths(t_init *init)
 		i++;
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void ft_close(t_init *init)
-{
-    int i;
-
-    i = 0;
-    while (i < init->nb_of_philo)
-    {
-        pthread_mutex_destroy(&init->forks[i]);
-        i++;
-    }
-
-     if (init->philo)
-         free(init->philo);
-     if (init->forks)
-         free(init->forks);
-}
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int check_all_eat(t_init *init)
 {
@@ -70,12 +71,14 @@ int check_all_eat(t_init *init)
 		return 0;
 	else if (init->all_philo_finished == init->nb_of_philo)
 	{
+		init->flag_eat = 1;
 		ft_close(init);
-		exit(1);
 		return 1;
 	}
 	return -1;
 }
+
+
 
 int help_verif_numbers(const char *str)
 {
@@ -107,4 +110,3 @@ int check_numbers(int argc, char **argv)
 	}
 	return 1;
 }
-

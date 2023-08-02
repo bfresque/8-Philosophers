@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:33:32 by bfresque          #+#    #+#             */
-/*   Updated: 2023/07/05 16:50:25 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/08/02 11:16:43 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ void	routine_one(t_init*init, t_philo *philo)
 		take_fork(init, philo);
 		if(i == init->number_must_eat)
 			break;
-		check_all_deaths(init);
-		check_all_eat(init);
 		action_sleep(init, philo);
 		check_all_deaths(init);
 		action_think(init, philo);
@@ -57,8 +55,6 @@ void	*philo_life(void *arg)
 		routine_one(data->init, data->philo);
 	else if(data->init->number_must_eat < 0)
 		routine_two(data->init, data->philo);
-	else
-		exit(-1);
 	return(NULL);
 }
 
