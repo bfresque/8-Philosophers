@@ -6,17 +6,17 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:33:19 by bfresque          #+#    #+#             */
-/*   Updated: 2023/08/02 11:19:27 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/08/04 13:35:54 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"../includes/philosophers.h"
+#include "../includes/philo.h"
 
-t_init *init_data(t_init *init, char **av)
+t_init	*init_data(t_init *init, char **av)
 {
-	int t_to_th;
+	int	t_to_th;
 
-	if(ft_atoi_philo(av[1]) == 1)
+	if (ft_atoi_philo(av[1]) == 1)
 	{
 		philo_just_one(init, av);
 		return (NULL);
@@ -29,25 +29,27 @@ t_init *init_data(t_init *init, char **av)
 	if (t_to_th < 0)
 		t_to_th = 0;
 	init->time_to_think = t_to_th;
-	if(av[5])
+	if (av[5])
 		init->number_must_eat = ft_atoi_philo(av[5]);
 	else
 		init->number_must_eat = -1;
-	init->all_philo_finished = 0; //pas sur que ca sert
+	init->all_philo_finished = 0;
 	init->flag_death = 0;
 	init->flag_eat = 0;
+	init->death_printed = 0;
+	pthread_mutex_init(&(init->death_printed_mutex), NULL);
 	pthread_mutex_init(&(init->print_mutex), NULL);
-	return init;
+	return (init);
 }
 
-t_init *init_philo(t_init *init)
+t_init	*init_philo(t_init *init)
 {
-	int i;
+	int	i;
 
 	i = init->nb_of_philo -1;
 	init->philo = malloc(sizeof(t_philo) * init->nb_of_philo);
 	if (init->philo == NULL)
-		return NULL;
+		return (NULL);
 	while (i >= 0)
 	{
 		init->philo[i].id_philo = i + 1;
@@ -58,21 +60,21 @@ t_init *init_philo(t_init *init)
 		pthread_mutex_init(&(init->philo[i].eat_mutex), NULL);
 		i--;
 	}
-	return init;
+	return (init);
 }
 
-t_init *init_forks(t_init *init)
+t_init	*init_forks(t_init *init)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	init->forks = malloc(sizeof(pthread_mutex_t) * init->nb_of_philo);
 	if (init->forks == NULL)
-		return NULL;
+		return (NULL);
 	while (i < init->nb_of_philo)
 	{
 		pthread_mutex_init(&(init->forks[i]), NULL);
 		i++;
 	}
-	return init;
+	return (init);
 }

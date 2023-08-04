@@ -6,17 +6,19 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:33:24 by bfresque          #+#    #+#             */
-/*   Updated: 2023/08/02 11:31:46 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/08/04 14:00:07 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"../includes/philosophers.h"
+#include "../includes/philo.h"
 
 int	ft_atoi_philo(char *str)
 {
-	int result = 0;
-	int sign = 1;
+	int	result;
+	int	sign;
 
+	result = 0;
+	sign = 1;
 	while (*str == ' ' || (*str >= 9 && *str <= 13))
 			str++;
 	if (*str == '-')
@@ -31,37 +33,42 @@ int	ft_atoi_philo(char *str)
 	return (sign * result);
 }
 
-long long ft_get_time()
+long long	ft_get_time(void)
 {
-	struct timeval current_time;
+	struct timeval	current_time;
 
 	if (gettimeofday(&current_time, NULL))
 		return (-1);
-
 	return ((current_time.tv_sec * 1000) + (current_time.tv_usec / 1000));
 }
 
-void print(t_init *init, int id_phil, char *str)
+void	print(t_init *init, int id, char *str)
 {
-    pthread_mutex_lock(&(init->print_mutex));
-    printf("%lld %d %s", (ft_get_time() - init->philo->start_time), id_phil, str);
-    if (str[1] == 'd')
-    {
-        pthread_mutex_lock(&(init->print_mutex)); // Bloquer à nouveau le mutex pour éviter toute interférence avec d'autres threads
-        if (!init->flag_death && !init->flag_eat) // Vérifier les indicateurs pour éviter l'affichage répété
-        {
-            init->flag_death = 1;
-            ft_close(init);
-            printf("A philosopher has died. The simulation will now end.\n");
-        }
-        pthread_mutex_unlock(&(init->print_mutex));
-    }
-    else
-    {
-        pthread_mutex_unlock(&(init->print_mutex));
-    }
+	pthread_mutex_lock(&init->death_printed_mutex);
+	check_all_deaths(init);
+	if (init->flag_death != 0)
+	{
+		if (init->death_printed != 1)
+		{
+			init->death_printed++;
+			pthread_mutex_lock(&(init->print_mutex));
+			printf("%lld %d ", (ft_get_time() - init->philo->start_time), id);
+			printf("%s died\n%s", RED, RESET);
+		}
+		else
+			pthread_mutex_unlock(&init->death_printed_mutex);
+		return ;
+	}
+	pthread_mutex_unlock(&init->death_printed_mutex);
+	pthread_mutex_lock(&init->death_printed_mutex);
+	if (init->flag_death == 0)
+	{
+		pthread_mutex_lock(&(init->print_mutex));
+		printf("%lld %d %s", (ft_get_time() - init->philo->start_time), id, str);
+		pthread_mutex_unlock(&(init->print_mutex));
+	}
+	pthread_mutex_unlock(&init->death_printed_mutex);
 }
-
 
 void	philo_just_one(t_init *init, char **av)
 {

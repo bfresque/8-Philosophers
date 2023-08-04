@@ -6,25 +6,35 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:33:32 by bfresque          #+#    #+#             */
-/*   Updated: 2023/08/02 11:16:43 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/08/04 13:32:42 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"../includes/philosophers.h"
+#include "../includes/philo.h"
 
-void	routine_one(t_init*init, t_philo *philo)
+void	routine_one(t_init *init, t_philo *philo)
 {
 	int	i;
 
 	i = 1;
-	while (i <= init->number_must_eat)
+	// printf(" philo : %d\n", philo->id_philo);//
+
+	while (i <= init->number_must_eat &&  (init->flag_death == 0))
 	{
+		// printf("%s je boulce une ?\n%s", MAGENTA, RESET);//
 		take_fork(init, philo);
-		if(i == init->number_must_eat)
-			break;
+		if (i == init->number_must_eat)
+			break ;
+		// printf("%s j'ai fini fourchette ?\n%s", MAGENTA, RESET);//
+
 		action_sleep(init, philo);
-		check_all_deaths(init);
+		// printf("%s j'ai fini dodo ?\n%s", MAGENTA, RESET);//
+
+		// if (check_all_deaths(init))
+			// return ;
 		action_think(init, philo);
+		// if (check_all_deaths(init))
+			// return ;
 		check_all_deaths(init);
 		i++;
 	}
@@ -35,13 +45,18 @@ void	routine_two(t_init*init, t_philo *philo)
 	int	i;
 
 	i = 1;
-	while (i)
+	while (i && (init->flag_death == 0))
 	{
+		// printf("%s je boulce deux ?\n%s", MAGENTA, RESET);//
 		take_fork(init, philo);
-		check_all_deaths(init);
+		// if (check_all_deaths(init) == 0)
+			// return ;
 		action_sleep(init, philo);
-		check_all_deaths(init);
+		// if (check_all_deaths(init) == 0)
+			// return ;
 		action_think(init, philo);
+		// if (check_all_deaths(init) == 0)
+			// return ;
 		check_all_deaths(init);
 		i++;
 	}
@@ -49,31 +64,38 @@ void	routine_two(t_init*init, t_philo *philo)
 
 void	*philo_life(void *arg)
 {
-	t_data *data = (t_data *)arg;
+	t_data	*data;
 
-	if(data->init->number_must_eat > 0)
+	data = (t_data *)arg;
+	if (data->init->number_must_eat > 0)
 		routine_one(data->init, data->philo);
-	else if(data->init->number_must_eat < 0)
+	else if (data->init->number_must_eat < 0)
 		routine_two(data->init, data->philo);
-	return(NULL);
+	return (NULL);
 }
 
-void start_threads(t_init *init) {
-	int i = 0;
-	long long int time_init = ft_get_time();
-	t_data *data = NULL;
+void	start_threads(t_init *init)
+{
+	int				i;
+	int				j;
+	long long int	time_init;
+	t_data			*data;
 
-	while (i < init->nb_of_philo) {
+	i = 0;
+	j = 0;
+	time_init = ft_get_time();
+	data = NULL;
+	while (i < init->nb_of_philo)
+	{
 		data = malloc(sizeof(t_data));
 		if (!data)
 		{
-			int j = 0;
 			while (j < i)
 			{
 				free(init->philo[j].data);
 				j++;
 			}
-			return;
+			return ;
 		}
 		data->init = init;
 		data->philo = &init->philo[i];
@@ -90,9 +112,4 @@ void start_threads(t_init *init) {
 		i++;
 	}
 	i = 0;
-	while (i < init->nb_of_philo)
-	{
-		free(init->philo[i].data);
-		i++;
-	}
 }
