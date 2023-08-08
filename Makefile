@@ -6,7 +6,7 @@
 #    By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/27 14:35:05 by bfresque          #+#    #+#              #
-#    Updated: 2023/08/04 14:26:36 by bfresque         ###   ########.fr        #
+#    Updated: 2023/08/08 13:50:05 by bfresque         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = philo
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -fsanitize=thread
 
 OBJ_DIR_PHILO = srcs/obj_philo
 

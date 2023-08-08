@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 14:02:25 by bfresque          #+#    #+#             */
-/*   Updated: 2023/08/04 14:08:26 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/08/08 14:30:34 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,64 +22,44 @@ void	ft_close(t_init *init)
 		pthread_mutex_destroy(&init->forks[i]);
 		i++;
 	}
+	pthread_mutex_destroy(&init->print_mutex);
+	pthread_mutex_destroy(&init->death_printed_mutex);
+	pthread_mutex_destroy(&init->philo->eat_mutex);
+	pthread_mutex_destroy(&init->philo->mutex_time_last_eat);
+	pthread_mutex_destroy(&init->death_mutex);
 	if (init->philo)
 		free(init->philo);
 	if (init->forks)
 		free(init->forks);
 }
 
-void	check_death(t_init *init, t_philo *philo)
+int	check_flag_died(t_init *init)
 {
-	long long int	current_time;
-	long long int	time_since_last_eat;
-
-	current_time = ft_get_time();
-	time_since_last_eat = current_time - philo->time_last_eat;
-	if (time_since_last_eat > (long long int)init->time_to_die)
+	pthread_mutex_lock(&(init->death_mutex));
+	if (init->flag_death != 0)
 	{
-		pthread_mutex_init(&(philo->death_mutex), NULL);
-		pthread_mutex_lock(&(philo->death_mutex));
+		pthread_mutex_unlock(&(init->death_mutex));
+		return (1);
+	}
+	pthread_mutex_unlock(&(init->death_mutex));
+	return (0);
+}
+
+int	check_all_deaths(t_init *init, t_philo *philo)
+{
+	pthread_mutex_lock(&(philo->mutex_time_last_eat));
+	long long int time_last_eat = init->philo->time_last_eat;
+	pthread_mutex_unlock(&(philo->mutex_time_last_eat));
+	if ((ft_get_time() - time_last_eat) > init->time_to_die)
+	{
+		pthread_mutex_lock(&(init->death_mutex));
 		init->flag_death = 1;
-		pthread_mutex_unlock(&(philo->death_mutex));
+		pthread_mutex_unlock(&(init->death_mutex));
+		print(init, philo->id_philo, " died");
+		return (-1);
 	}
+	return (0);
 }
-
-void	check_all_deaths(t_init *init)
-{
-	int	i;
-
-	i = 0;
-	while (i < init->nb_of_philo && (init->flag_death == 0))
-	{
-		check_death(init, &init->philo[i]);
-		i++;
-	}
-}
-
-// int	check_all_eat(t_init *init)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	init->all_philo_finished = 0;
-// 	while (i < init->nb_of_philo)
-// 	{
-// 		pthread_mutex_lock(&(init->philo[i].eat_mutex));
-// 		if (init->philo[i].nb_eat_time == init->number_must_eat)
-// 			init->all_philo_finished++;
-// 		pthread_mutex_unlock(&(init->philo[i].eat_mutex));
-// 		i++;
-// 	}
-// 	if (init->all_philo_finished < init->nb_of_philo)
-// 		return (0);
-// 	else if (init->all_philo_finished == init->nb_of_philo)
-// 	{
-// 		init->flag_eat = 1;
-// 		ft_close(init);
-// 		return (1);
-// 	}
-// 	return (-1);
-// }
 
 int	help_verif_numbers(char *str)
 {
@@ -88,7 +68,10 @@ int	help_verif_numbers(char *str)
 	int	num;
 
 	i = 0;
-	len = strlen(str);/* attention fobiden fonctions */
+	while(str[i])
+		i++;
+	len = i;
+	i = 0;
 	num = ft_atoi_philo(str);
 	while (i < len)
 	{

@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 14:30:45 by bfresque          #+#    #+#             */
-/*   Updated: 2023/08/04 13:30:57 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/08/08 13:49:04 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ typedef struct s_philo
 	int				right_fork_id;
 	pthread_t		thread_id;
 	pthread_mutex_t	eat_mutex;
-	pthread_mutex_t	death_mutex;
+	pthread_mutex_t	mutex_time_last_eat;
 	struct s_data	*data;
 }				t_philo;
 
@@ -63,6 +63,7 @@ typedef struct s_init
 	int				number_must_eat;
 	int				all_philo_finished;
 	t_philo			*philo;
+	pthread_mutex_t	death_mutex;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	death_printed_mutex;
@@ -74,13 +75,16 @@ typedef struct s_data
 	t_philo	*philo;
 }				t_data;
 
+int    check_flag_died(t_init *init);
+
 /*********************	action.c ***********************/
 void		action_think(t_init *init, t_philo *philo);
 void		action_sleep(t_init *init, t_philo *philo);
 void		take_fork(t_init *init, t_philo *philo);
 
 /*********************	check.c ***********************/
-void			check_all_deaths(t_init *init);
+int			check_all_deaths(t_init *init, t_philo *philo);
+void		check_death(t_init *init, t_philo *philo);
 int			check_all_eat(t_init *init);
 int			check_numbers(int argc, char **argv);
 

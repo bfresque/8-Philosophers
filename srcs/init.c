@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:33:19 by bfresque          #+#    #+#             */
-/*   Updated: 2023/08/04 13:35:54 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/08/08 13:47:34 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,6 @@ t_init	*init_data(t_init *init, char **av)
 {
 	int	t_to_th;
 
-	if (ft_atoi_philo(av[1]) == 1)
-	{
-		philo_just_one(init, av);
-		return (NULL);
-	}
 	init->nb_of_philo = ft_atoi_philo(av[1]);
 	init->time_to_die = ft_atoi_philo(av[2]);
 	init->time_to_eat = ft_atoi_philo(av[3]);
@@ -56,7 +51,9 @@ t_init	*init_philo(t_init *init)
 		init->philo[i].nb_eat_time = 0;
 		init->philo[i].left_fork_id = i;
 		init->philo[i].right_fork_id = (i + 1) % init->nb_of_philo;
-		init->philo[i].time_last_eat = 0;
+		init->philo[i].time_last_eat = ft_get_time();
+		pthread_mutex_init(&(init->philo->mutex_time_last_eat), NULL);
+		pthread_mutex_init(&(init->death_mutex), NULL);
 		pthread_mutex_init(&(init->philo[i].eat_mutex), NULL);
 		i--;
 	}
