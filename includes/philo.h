@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 14:30:45 by bfresque          #+#    #+#             */
-/*   Updated: 2023/08/08 13:49:04 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/08/08 17:43:35 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,11 @@
 typedef struct s_philo
 {
 	int				id_philo;
-	int				nb_eat_time;
 	long long		time_last_eat;
 	long long		start_time;
 	int				left_fork_id;
 	int				right_fork_id;
 	pthread_t		thread_id;
-	pthread_mutex_t	eat_mutex;
 	pthread_mutex_t	mutex_time_last_eat;
 	struct s_data	*data;
 }				t_philo;
@@ -75,8 +73,6 @@ typedef struct s_data
 	t_philo	*philo;
 }				t_data;
 
-int    check_flag_died(t_init *init);
-
 /*********************	action.c ***********************/
 void		action_think(t_init *init, t_philo *philo);
 void		action_sleep(t_init *init, t_philo *philo);
@@ -87,6 +83,7 @@ int			check_all_deaths(t_init *init, t_philo *philo);
 void		check_death(t_init *init, t_philo *philo);
 int			check_all_eat(t_init *init);
 int			check_numbers(int argc, char **argv);
+int			check_flag_died(t_init *init);
 
 /*********************	init.c ***********************/
 t_init		*init_data(t_init *data, char **av);
@@ -102,5 +99,6 @@ long long	ft_get_time(void);
 void		print(t_init *init, int id, char *str);
 void		philo_just_one(t_init *init, char **av);
 void		ft_close(t_init *init);
+void		cleanup_data(t_init *init, int last_index);
 
 #endif

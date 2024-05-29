@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:33:27 by bfresque          #+#    #+#             */
-/*   Updated: 2023/08/03 14:37:00 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/08/08 17:43:27 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,6 @@ int	main(int ac, char **av)
 	data = init_philo(data);
 	data = init_forks(data);
 	start_threads(data);
+	ft_close(data);
 	return (0);
 }

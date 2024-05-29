@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:33:32 by bfresque          #+#    #+#             */
-/*   Updated: 2023/08/08 13:58:04 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/08/09 09:13:51 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,9 @@ void	*philo_life(void *arg)
 	data = (t_data *)arg;
 	if (data->init->nb_of_philo == 1)
 	{
-		while(check_flag_died(data->init) == 0)
-			check_all_deaths(data->init, data->philo); //a mettre pour que le philo seul meurt
+		while (check_flag_died(data->init) == 0)
+			check_all_deaths(data->init, data->philo);
+		return (NULL);
 	}
 	if (data->init->number_must_eat > 0)
 		routine_one(data->init, data->philo);
@@ -59,43 +60,44 @@ void	*philo_life(void *arg)
 	return (NULL);
 }
 
+void	wait_threads(t_init *init)
+{
+	int	i;
+
+	i = 0;
+	while (i < init->nb_of_philo)
+	{
+		pthread_join(init->philo[i].thread_id, NULL);
+		free(init->philo[i].data);
+		i++;
+	}
+}
+
 void	start_threads(t_init *init)
 {
-	int				i;
-	int				j;
-	long long int	time_init;
-	t_data			*data;
+	int		i;
+	int		j;
+	t_data	*data;
 
 	i = 0;
 	j = 0;
-	time_init = ft_get_time();
 	data = NULL;
 	while (i < init->nb_of_philo)
 	{
 		data = malloc(sizeof(t_data));
 		if (!data)
 		{
-			while (j < i)
-			{
-				free(init->philo[j].data);
-				j++;
-			}
+			cleanup_data(init, j);
 			return ;
 		}
 		data->init = init;
 		data->philo = &init->philo[i];
-		data->philo->start_time = time_init;
-		pthread_mutex_lock(&(init->philo->mutex_time_last_eat));
+		data->philo->start_time = ft_get_time();
 		data->philo->time_last_eat = ft_get_time();
-		pthread_mutex_unlock(&(init->philo->mutex_time_last_eat));
 		init->philo[i].data = data;
 		pthread_create(&init->philo[i].thread_id, NULL, philo_life, data);
+		usleep(50);
 		i++;
 	}
-	i = 0;
-	while (i < init->nb_of_philo)
-	{
-		pthread_join(init->philo[i].thread_id, NULL);
-		i++;
-	}
+	wait_threads(init);
 }

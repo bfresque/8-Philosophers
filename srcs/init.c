@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:33:19 by bfresque          #+#    #+#             */
-/*   Updated: 2023/08/08 13:47:34 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/08/08 17:12:42 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ t_init	*init_data(t_init *init, char **av)
 	init->time_to_die = ft_atoi_philo(av[2]);
 	init->time_to_eat = ft_atoi_philo(av[3]);
 	init->time_to_sleep = ft_atoi_philo(av[4]);
-	t_to_th = (init->time_to_die - (init->time_to_eat + init->time_to_sleep)) / 2;
+	t_to_th = (init->time_to_die - \
+		(init->time_to_eat + init->time_to_sleep)) / 2;
 	if (t_to_th < 0)
 		t_to_th = 0;
 	init->time_to_think = t_to_th;
@@ -48,13 +49,11 @@ t_init	*init_philo(t_init *init)
 	while (i >= 0)
 	{
 		init->philo[i].id_philo = i + 1;
-		init->philo[i].nb_eat_time = 0;
 		init->philo[i].left_fork_id = i;
 		init->philo[i].right_fork_id = (i + 1) % init->nb_of_philo;
-		init->philo[i].time_last_eat = ft_get_time();
-		pthread_mutex_init(&(init->philo->mutex_time_last_eat), NULL);
+		init->philo[i].time_last_eat = 0;
 		pthread_mutex_init(&(init->death_mutex), NULL);
-		pthread_mutex_init(&(init->philo[i].eat_mutex), NULL);
+		pthread_mutex_init(&(init->philo[i].mutex_time_last_eat), NULL);
 		i--;
 	}
 	return (init);

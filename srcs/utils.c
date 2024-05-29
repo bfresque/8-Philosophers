@@ -6,7 +6,7 @@
 /*   By: bfresque <bfresque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 14:33:24 by bfresque          #+#    #+#             */
-/*   Updated: 2023/08/08 14:32:12 by bfresque         ###   ########.fr       */
+/*   Updated: 2023/08/08 16:22:40 by bfresque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,19 +52,29 @@ void	print(t_init *init, int id, char *str)
 			init->death_printed++;
 			pthread_mutex_lock(&(init->print_mutex));
 			printf("%lld %d", (ft_get_time() - init->philo->start_time), id);
-			printf("%s died%s", RED, RESET);
+			printf(" died\n");
 			pthread_mutex_unlock(&init->print_mutex);
 		}
 		pthread_mutex_unlock(&init->death_printed_mutex);
 		return ;
 	}
-	pthread_mutex_unlock(&init->death_printed_mutex);//
-	pthread_mutex_lock(&init->death_printed_mutex);//
+	pthread_mutex_unlock(&init->death_printed_mutex);
+	pthread_mutex_lock(&init->death_printed_mutex);
 	if (check_flag_died(init) == 0)
 	{
 		pthread_mutex_lock(&(init->print_mutex));
-		printf("%lld %d %s", (ft_get_time() - init->philo->start_time), id, str);
+		printf("%lld %d", (ft_get_time() - init->philo->start_time), id);
+		printf("%s", str);
 		pthread_mutex_unlock(&(init->print_mutex));
 	}
 	pthread_mutex_unlock(&init->death_printed_mutex);
+}
+
+void	cleanup_data(t_init *init, int last_index)
+{
+	while (last_index >= 0)
+	{
+		free(init->philo[last_index].data);
+		last_index--;
+	}
 }
